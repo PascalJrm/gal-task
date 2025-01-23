@@ -7,17 +7,23 @@ class Settings(BaseModel):
     # TODO: Fix this to pydantic-settings - remove local path
     data_folder: Path = Field(default=Path("/home/p/projects/gal-task/data"))
     input_data_folder: Path = Field(default=Path("/home/p/projects/gal-task/input_data"))
+    output_data_folder: Path = Field(default=Path("/home/p/projects/gal-task/output_data"))
 
     gensim_model_uri: str = Field(
         default="https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/view?usp=sharing&resourcekey=0-wjGZdNAUop6WykTtMip30g"
     )
     gensim_model_filename: str = Field(default="GoogleNews-vectors-negative300.bin.gz")
     gensim_flat_model_filename: str = Field(default="gensim_model_vectors_flat.csv")
-    gensim_flat_model_size: int = Field(default=10000000)
+    gensim_flat_model_size: int = Field(default=1000000)
 
-    default_phrases_filename: str = Field(default="phrases.csv")
+    default_phrases_filename: str = Field(default="original_phrases.csv")
     default_phrases_encoding: str = Field(default="Windows-1252")
     default_phrases_embedded_filename: str = Field(default="phrases_embedded.parquet")
+
+    # Cleaning
+    use_complex_embeddings: bool = Field(default=False)
+
+    ray_actors: int = Field(default=10)
 
     @property
     def gensim_model_path(self) -> Path:

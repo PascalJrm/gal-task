@@ -1,7 +1,10 @@
 from typing import Any
 
 import numpy as np
+
+# import pandas as pd
 import pandas as pd
+import ray
 from gensim.models import KeyedVectors
 from loguru import logger
 
@@ -13,8 +16,41 @@ class EmbeddingModelSimple:
     _embedding_model: Any = None
     _phrase_mapping: Any = None
 
+    _ray_embedding_model_handle: Any = None
+
     @property
-    def embedding_model(self):
+    def status(self):
+        return {
+            "embedding_model_exists": settings.gensim_model_path.exists(),
+            "embedding_model_loaded": bool(self._embedding_model),
+            "phrase_mapping_cache_exists": settings.default_phrases_embedded_path.exists(),
+            "phrase_mapping_cache_loaded": bool(self._phrase_mapping),
+        }
+
+    def check(self):
+        if not self.status["embedding_model_exists"]:
+            raise FileNotFoundError()
+        else:
+            logger.info(f"Embedding model found at {settings.gensim_model_path}")
+
+    def load_all(self):
+        self.check()
+        self.embedding_model_inner.get()
+        self.static_phrase_mappings.get()
+        self.ray_embedding_model_handle.get()
+
+    @property
+    def ray_embedding_model_handle(self):
+        if not self._ray_embedding_model_handle:
+            ray.init(ignore_reinit_error=True)
+            self._ray_embedding_model_handle = ray.put(self.embedding_model_inner)
+            logger.debug(
+                f"Ray embedding model handle: {self._ray_embedding_model_handle} of type {type(self._ray_embedding_model_handle)}"
+            )
+        return self._ray_embedding_model_handle
+
+    @property
+    def embedding_model_inner(self):
         if not self._embedding_model:
             logger.info("Loading embedding model")
             self._embedding_model = KeyedVectors.load_word2vec_format(
@@ -47,13 +83,19 @@ class EmbeddingModelSimple:
 
         return self._phrase_mapping
 
-    def embed_phrase(self, phrase: str):
+    def embed_phrase(self, phrase: str) -> np.ndarray:
         def normalized_sum(embeddings: np.ndarray):
             return sum(embeddings) / len(embeddings)
 
         words = phrase.split()
-        # logger.debug(f"The input phrase has length {len(words)}")
-        embeddings = np.array([self.embedding_model.get_vector(word) for word in words if word in self.embedding_model])
+
+        if settings.use_complex_embeddings:
+            raise NotImplementedError("Complex embeddings not implemented in local")
+        else:
+            embeddings = np.array([
+                self.embedding_model_inner.get_vector(word) for word in words if word in self.embedding_model_inner
+            ])
+
         return normalized_sum(embeddings)
 
     def embed_phrases(self, phrases_df: pd.DataFrame) -> pd.DataFrame:
