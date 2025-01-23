@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
+from gal_task.distributed_embedding_processor import EmbeddingProcessorManager
 from gal_task.embedding_model import EmbeddingModelSimple
-from gal_task.embedding_processor import EmbeddingProcessorManager
 from gal_task.io import get_input_phrases_df
 
 

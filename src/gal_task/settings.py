@@ -23,6 +23,7 @@ class Settings(BaseModel):
     # Cleaning
     use_complex_embeddings: bool = Field(default=False)
 
+    use_ray: bool = Field(default=False)
     ray_actors: int = Field(default=10)
 
     @property
