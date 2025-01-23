@@ -139,11 +139,11 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 dist/
-data/
+working_data/
 .idea/
 
 *GoogleNews-vectors-negative300.bin.gz*
 
 !/input_data/
-!/data/.dontignore
+!/working_data/.gitkeep
 !/tests/data/
