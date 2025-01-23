@@ -7,13 +7,6 @@ from loguru import logger
 
 from gal_task.settings import settings
 
-
-def startup() -> None:
-    # download_gensim_model()
-    # download_gensim_model_flat()
-    pass
-
-
 # TODO: Do not require original model if CSV exitst
 # TODO: Fix all the mypy errors
 # TODO: Write intelligent encoding reader

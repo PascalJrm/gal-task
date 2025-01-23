@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -5,7 +6,7 @@ import pandas
 import typer
 from loguru import logger
 
-import gal_task.main
+import gal_task.utility as utility
 from gal_task.embedding_model import EmbeddingModelSimple
 from gal_task.io import get_input_phrases
 
@@ -13,10 +14,16 @@ app = typer.Typer()
 
 embedding_model = EmbeddingModelSimple()
 
+logger.remove()
+logger.add(sys.stderr, level="DEBUG")
+
 
 @app.command()
 def embed_phrases_list_to_disk(output_phrase_path) -> None:
+    logger.info("Load input phrases")
     input_phrases = get_input_phrases()
+    logger.info("Input phrases loaded")
+
     embedding_model.embed_phrases(input_phrases)
     embedding_model.save_phrases(output_phrase_path)
 
@@ -33,11 +40,9 @@ def save_similarities_to_disk(output_similarities_path: Path) -> None:
     logger.info("Calculating similarities")
 
     word_embeddings = {
-        phrase: gal_task.main.encode_phrase(embedding_model.embedding_model, phrase) for phrase in get_input_phrases()
+        phrase: utility.encode_phrase(embedding_model.embedding_model, phrase) for phrase in get_input_phrases()
     }
-    phrase_embeddings = {
-        phrase: gal_task.main.normalized_sum(embeddings) for phrase, embeddings in word_embeddings.items()
-    }
+    phrase_embeddings = {phrase: utility.normalized_sum(embeddings) for phrase, embeddings in word_embeddings.items()}
 
     phrase_similarities = [
         (phrase_1, phrase_2, embedding_1, embedding_2, np.linalg.norm(embedding_1 - embedding_2, ord=2))
@@ -54,16 +59,14 @@ def save_similarities_to_disk(output_similarities_path: Path) -> None:
 
 @app.command()
 def get_phrase_similarity(input_phrase: str) -> str:
-    embedding = gal_task.main.encode_phrase(embedding_model.embedding_model, input_phrase)
-    normalized_embedding = gal_task.main.normalized_sum(embedding)
+    embedding = utility.encode_phrase(embedding_model.embedding_model, input_phrase)
+    normalized_embedding = utility.normalized_sum(embedding)
 
-    word_embeddings = {
-        phrase: gal_task.main.encode_phrase(embedding_model.embedding_model, phrase) for phrase in get_input_phrases()
-    }
+    phrase_embeddings = embedding_model.phrase_mapping
 
-    phrase_embeddings = {
-        phrase: gal_task.main.normalized_sum(embeddings) for phrase, embeddings in word_embeddings.items()
-    }
+    # phrase_embeddings = {
+    #     phrase: utility.normalized_sum(embeddings) for phrase, embeddings in word_embeddings.items()
+    # }
 
     phrase_similarities = [
         (input_phrase, phrase, embedding, np.linalg.norm(normalized_embedding - embedding, ord=2))
