@@ -1,5 +1,6 @@
 from pprint import pprint
 
+import gdown
 import typer
 from loguru import logger
 
@@ -11,12 +12,37 @@ app = typer.Typer()
 
 
 @app.command()
+def init() -> None:
+    """
+    Downloads the gensim model to the input data folder
+    """
+
+    logger.info("Loading Settings")
+    settings = Settings()
+
+    logger.info(f"Model Filename: {settings.gensim_model_filename}")
+
+    model_path = settings.input_data_folder / (settings.gensim_model_filename + "a")
+
+    if not model_path.exists():
+        logger.info("Model not downloaded yet. Downloading now")
+        gdown.download(id=settings.gensim_model_file_id, output=str(model_path), quiet=False)
+    else:
+        logger.info("Model already downloaded")
+
+    settings.input_data_folder.mkdir(parents=True, exist_ok=True)
+    settings.working_data_folder.mkdir(parents=True, exist_ok=True)
+    settings.output_data_folder.mkdir(parents=True, exist_ok=True)
+
+
+@app.command()
 def get_cross_similarities_for_phrase(phrase_filename: str, model_filename: str) -> None:
     """
     Calculates similarities between the static phrase dictionary and itself. Saves at the output_similarities_path
     :param output_similarities_path: The path to save the similarities csv to
     :return:
     """
+    init()
 
     logger.info("Loading Settings")
     settings = Settings()

@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     gensim_model_uri: str = Field(
         default="https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/view?usp=sharing&resourcekey=0-wjGZdNAUop6WykTtMip30g"
     )
-
+    gensim_model_file_id: str = Field(default="0B7XkCwpI5KDYNlNUTTlSS21pQmM")
     gensim_model_filename: str = Field(default="GoogleNews-vectors-negative300.bin.gz")
     gensim_flat_model_size: int = Field(default=1_000_000)
 
