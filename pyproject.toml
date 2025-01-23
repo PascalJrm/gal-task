@@ -24,6 +24,7 @@ dependencies = [
     "pandas>=2.2.3",
     "pandera[modin-ray]>=0.22.1",
     "pydantic>=2.10.5",
+    "typer>=0.15.1",
 ]
 
 [project.urls]

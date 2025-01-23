@@ -85,12 +85,6 @@ def normalized_sum(embeddings: np.ndarray):
     return sum(embeddings) / len(embeddings)
 
 
-def debug_phrase_embedding(phrase_embedding: np.ndarray):
-    logger.debug(f"Embedding: {phrase_embedding}")
-    logger.debug(f"Embedding shape: {phrase_embedding.shape}")
-    logger.debug(f"Embedding sum: {sum(phrase_embedding)}")
-
-
 def run():
     startup()
 
@@ -99,4 +93,10 @@ def run():
     word_embeddings = {phrase: encode_phrase(model, phrase) for phrase in get_input_phrases_basic_generator()}
     phrase_embeddings = {phrase: normalized_sum(embeddings) for phrase, embeddings in word_embeddings.items()}
 
-    print(phrase_embeddings)
+    phrase_similarities = [
+        (phrase_1, phrase_2, embedding_1, embedding_2, np.linalg.norm(embedding_1 - embedding_2, ord=2))
+        for phrase_1, embedding_1 in phrase_embeddings.items()
+        for phrase_2, embedding_2 in phrase_embeddings.items()
+    ]
+
+    print(phrase_similarities[1])
