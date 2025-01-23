@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -11,9 +10,6 @@ from gal_task.embedding_model import EmbeddingModelSimple
 app = typer.Typer()
 
 embedding_model = EmbeddingModelSimple()
-
-logger.remove()
-logger.add(sys.stderr, level="DEBUG")
 
 
 @app.command()
@@ -39,7 +35,7 @@ def save_similarities_to_disk_as_csv(output_similarities_path: Path) -> None:
 @app.command()
 def get_phrase_similarity(input_phrase: str) -> str:
     input_embedding_df = pd.DataFrame(
-        [(input_phrase, embedding_model.embed_phrase(input_phrase))], columns=["phrase", "embedding"]
+        [(input_phrase, embedding_model.embed_phrase(input_phrase))], columns=["phrases", "embedding"]
     )
     print(input_embedding_df)
 
@@ -54,8 +50,8 @@ def get_phrase_similarity(input_phrase: str) -> str:
     maximum_similarity = phrases_joined.iloc[min_index]
 
     output_string = (
-        f"The most similar phrase to '{maximum_similarity.phrase_x}' "
-        f"is '{maximum_similarity.phrase_y}' with a similarity of '{maximum_similarity.similarities}'"
+        f"The most similar phrase to '{maximum_similarity.phrases_x}' "
+        f"is '{maximum_similarity.phrases_y}' with a similarity of '{maximum_similarity.similarities}'"
     )
 
     print(output_string)

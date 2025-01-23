@@ -5,7 +5,7 @@ import pandas as pd
 from gensim.models import KeyedVectors
 from loguru import logger
 
-from gal_task.io import get_input_phrases
+from gal_task.io import get_input_phrases_df
 from gal_task.settings import settings
 
 
@@ -22,24 +22,16 @@ class EmbeddingModelSimple:
             )
         return self._embedding_model
 
-    def calculate_static_phrase_mappings(self):
+    def calculate_static_phrase_mappings(self) -> pd.DataFrame:
         logger.info("Calculating Static phrase mappings")
-
-        input_phrases = get_input_phrases()
-
+        input_phrases = get_input_phrases_df()
         word_embeddings = self.embed_phrases(input_phrases)
-
         return word_embeddings
 
     def save_static_phrase_mappings_to_disk(self):
         logger.info("Saving embedded phrases to disk")
-
         word_embeddings = self.calculate_static_phrase_mappings()
-
-        df = pd.DataFrame(word_embeddings.items())
-        df.columns = ["phrase", "embedding"]
-
-        df.to_parquet(settings.default_phrases_embedded_path)
+        word_embeddings.to_parquet(settings.default_phrases_embedded_path)
 
     def load_static_phrase_mapping_from_disk(self):
         logger.info("Loading embedded phrases from disk")
@@ -64,6 +56,8 @@ class EmbeddingModelSimple:
         embeddings = np.array([self.embedding_model.get_vector(word) for word in words if word in self.embedding_model])
         return normalized_sum(embeddings)
 
-    def embed_phrases(self, phrases: list[str]) -> dict[str, np.array]:
-        logger.info(f"Embedding {len(phrases)} phrases for EmbeddingModel")
-        return {phrase: self.embed_phrase(phrase) for phrase in phrases}
+    def embed_phrases(self, phrases_df: pd.DataFrame) -> pd.DataFrame:
+        logger.info(f"Embedding {len(phrases_df)} phrases for EmbeddingModel")
+        phrases_df["embedding"] = phrases_df.apply(lambda x: self.embed_phrase(x["Phrases"]), axis=1)
+        phrases_df.columns = ["phrases", "embedding"]
+        return phrases_df

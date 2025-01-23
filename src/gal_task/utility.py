@@ -1,7 +1,5 @@
 import gensim
 import numpy as np
-import pandas as pd
-import pandera as pa
 from gensim.models import KeyedVectors
 from loguru import logger
 
@@ -15,13 +13,6 @@ from gal_task.settings import settings
 # TODO: I assume the model limit is not picking up some standard words
 # TODO: Move the startup code into the embedding model initiation
 # TODO: Deal with bad input sentence
-
-
-def get_input_phrases_df() -> pd.DataFrame:
-    schema = pa.DataFrameSchema({"Phrases": pa.Column(pa.String, checks=[])})
-    df = pd.read_csv(settings.default_phrases_path, encoding=settings.default_phrases_encoding)
-    schema.validate(df)
-    return df
 
 
 def process_embeddings(model, phrases: list[str]):
