@@ -17,11 +17,23 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+dependencies = [
+    "gdown>=5.2.0",
+    "gensim>=4.3.3",
+    "loguru>=0.7.3",
+    "pandas>=2.2.3",
+    "pandera[modin-ray]>=0.22.1",
+    "pydantic>=2.10.5",
+]
 
 [project.urls]
 Homepage = "https://PascalJrm.github.io/gal-task/"
 Repository = "https://github.com/PascalJrm/gal-task"
 Documentation = "https://PascalJrm.github.io/gal-task/"
+
+[project.scripts]
+execute = "gal_task.main:run"
+
 
 [dependency-groups]
 dev = [
