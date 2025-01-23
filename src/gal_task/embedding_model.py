@@ -27,25 +27,29 @@ class EmbeddingModelSimple:
         if not settings.gensim_model_path.exists():
             logger.info("Original model not found - downloading")
 
-            # TODO - Fix this to download the file
-
+            # TODO: Fix this to download the file
+            raise NotImplementedError("Download the file")
             # gdown.download("https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?resourcekey=0-wjGZdNAUop6WykTtMip30g", str(settings.gensim_model_path), quiet=False)
 
             logger.info(f"Original model downloaded at {settings.gensim_model_path}")
         else:
             logger.info(f"Original model found at {settings.gensim_model_path}")
 
-        if not settings.gensim_flat_model_path.exists():
-            logger.info("Flat file model not found - creating")
-            wv = KeyedVectors.load_word2vec_format(
-                settings.gensim_model_path, binary=True, limit=settings.gensim_flat_model_size
-            )
-            wv.save_word2vec_format(str(settings.gensim_flat_model_path))
-            logger.info(f"Flat file model created at {settings.gensim_flat_model_path}")
-        else:
-            logger.info(f"Flat file model found at {settings.gensim_flat_model_path}")
+        # if not settings.gensim_flat_model_path.exists():
+        #     logger.info("Flat file model not found - creating")
+        #     wv = KeyedVectors.load_word2vec_format(
+        #         settings.gensim_model_path, binary=True, limit=settings.gensim_flat_model_size
+        #     )
+        #     wv.save_word2vec_format(str(settings.gensim_flat_model_path))
+        #     logger.info(f"Flat file model created at {settings.gensim_flat_model_path}")
+        # else:
+        #     logger.info(f"Flat file model found at {settings.gensim_flat_model_path}")
+        #
+        # self.embedding_model = KeyedVectors.load_word2vec_format(settings.gensim_flat_model_path)
 
-        self.embedding_model = KeyedVectors.load_word2vec_format(settings.gensim_flat_model_path)
+        self.embedding_model = KeyedVectors.load_word2vec_format(
+            settings.gensim_model_path, binary=True, limit=settings.gensim_flat_model_size
+        )
 
     def _embed_phrase(self, phrase: str):
         words = phrase.split()
