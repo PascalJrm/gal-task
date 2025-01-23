@@ -15,7 +15,6 @@ from gal_task.settings import settings
 class EmbeddingModelSimple:
     _embedding_model: Any = None
     _phrase_mapping: Any = None
-
     _ray_embedding_model_handle: Any = None
 
     @property
@@ -41,12 +40,10 @@ class EmbeddingModelSimple:
 
     @property
     def ray_embedding_model_handle(self):
+        """Accessing this property puts the embedding model on the ray cluster"""
         if not self._ray_embedding_model_handle:
             ray.init(ignore_reinit_error=True)
             self._ray_embedding_model_handle = ray.put(self.embedding_model_inner)
-            logger.debug(
-                f"Ray embedding model handle: {self._ray_embedding_model_handle} of type {type(self._ray_embedding_model_handle)}"
-            )
         return self._ray_embedding_model_handle
 
     @property
