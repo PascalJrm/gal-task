@@ -5,3 +5,12 @@ my code unworkable and I have dropped it. I don't understand at all why I should
 
 
 [ ] GoogleNews-vectors-negative300.bin.gz must be loaded to the ./data folder
+
+
+
+## Instructions for use
+
+For use of the cli, please use
+```
+uv run cli --help
+```

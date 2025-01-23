@@ -17,7 +17,7 @@ class Settings(BaseModel):
 
     default_phrases_filename: str = Field(default="phrases.csv")
     default_phrases_encoding: str = Field(default="Windows-1252")
-    default_phrases_embedded_filename: str = Field(default="phrases_embedded.csv")
+    default_phrases_embedded_filename: str = Field(default="phrases_embedded.parquet")
 
     @property
     def gensim_model_path(self) -> Path:
