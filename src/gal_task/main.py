@@ -74,16 +74,29 @@ def get_model():
 def encode_phrase(model: gensim.models.word2vec, phrase: str):
     words = phrase.split()
     logger.debug(f"The input phrase has length {len(words)}")
-    embeddings = [model.get_vector(word) for word in words if word in model]
+    embeddings = np.array([model.get_vector(word) for word in words if word in model])
     logger.debug(f"The output embeddings have length {len(embeddings)}")
     logger.debug(f"An embedding has shape {embeddings[0].shape}")
-    average_embedding = np.mean(embeddings, axis=0)
-    logger.debug(f"The average embedding has shape {average_embedding.shape}")
+    logger.debug(f"An embedding has sum {sum(embeddings[0])}")
+    return embeddings
+
+
+def normalized_sum(embeddings: np.ndarray):
+    return sum(embeddings) / len(embeddings)
+
+
+def debug_phrase_embedding(phrase_embedding: np.ndarray):
+    logger.debug(f"Embedding: {phrase_embedding}")
+    logger.debug(f"Embedding shape: {phrase_embedding.shape}")
+    logger.debug(f"Embedding sum: {sum(phrase_embedding)}")
 
 
 def run():
     startup()
 
     # Load input phrases
-    phrases = get_input_phrases_basic_generator()
-    print(phrases)
+    model = get_model()
+    word_embeddings = {phrase: encode_phrase(model, phrase) for phrase in get_input_phrases_basic_generator()}
+    phrase_embeddings = {phrase: normalized_sum(embeddings) for phrase, embeddings in word_embeddings.items()}
+
+    print(phrase_embeddings)
