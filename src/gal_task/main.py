@@ -100,3 +100,18 @@ def run():
     ]
 
     print(phrase_similarities[1])
+
+    input_phrase = "The premiums are high"
+
+    encoded_phrase = encode_phrase(model, input_phrase)
+
+    normalized_phrase = normalized_sum(encoded_phrase)
+
+    phrase_similarities = [
+        (phrase, np.linalg.norm(normalized_phrase - embedding, ord=2))
+        for phrase, embedding in phrase_embeddings.items()
+    ]
+
+    print(phrase_similarities)
+
+    print(min(phrase_similarities, key=lambda x: x[1]))
