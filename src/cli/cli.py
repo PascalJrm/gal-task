@@ -34,7 +34,7 @@ def calculate_and_save_static_embeddings_to_disk() -> None:
 
 
 @app.command()
-def save_cross_similarities_to_disk_as_csv(output_similarities_filename: str = "similarities.csv") -> None:
+def save_cross_similarities_to_disk_as_csv(output_similarities_filename: str) -> None:
     """
     Calculates similarities between the static phrase dictionary and itself. Saves at the output_similarities_path
     :param output_similarities_path: The path to save the similarities csv to
