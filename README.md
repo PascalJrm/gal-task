@@ -2,7 +2,10 @@
 
 ## Introduction
 
-I made some strange decisions, and my codebase spiralled.
+Much improved codebase
+
+- Could refector to classes and pass in settings as a class variable, but I am not unhappy with explicitly
+passing settings around. I prefer a functional approach such as this.
 
 
 
