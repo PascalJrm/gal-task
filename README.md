@@ -64,8 +64,15 @@ The output data is stored in the output_data folder
 
 
 ### CLI Commands
+
+
 Get cross similarities for any given model
     uv run cli get-cross-similarities-for-phrase <phrase_filename> <model_filename>
+e.g.
+    uv run cli get-cross-similarities-for-phrase phrases.csv GoogleNews-vectors-negative300.bin.gz
 
 Get most similar phrases for any given phrase
     uv run cli get-most-similar-phrases-for-phrase <phrase_filename> <model_filename>
+e.g
+    uv run cli get-most-similar-phrases-for-phrase phrases.csv GoogleNews-vectors-negative300.bin.gz "I am a business"
+    

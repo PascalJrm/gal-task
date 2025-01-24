@@ -22,7 +22,7 @@ def init() -> None:
 
     logger.info(f"Model Filename: {settings.gensim_model_filename}")
 
-    model_path = settings.input_data_folder / (settings.gensim_model_filename + "a")
+    model_path = settings.input_data_folder / settings.gensim_model_filename
 
     if not model_path.exists():
         logger.info("Model not downloaded yet. Downloading now")
