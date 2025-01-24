@@ -148,3 +148,4 @@ working_data/
 !/working_data/.gitkeep
 !/tests/data/
 !/working_data/.gitkeep
+!/dist/.gitkeep
