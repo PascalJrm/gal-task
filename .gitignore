@@ -147,3 +147,4 @@ working_data/
 !/input_data/
 !/working_data/.gitkeep
 !/tests/data/
+!/working_data/.gitkeep
